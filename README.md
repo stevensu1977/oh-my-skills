@@ -12,6 +12,7 @@ A minimal desktop GUI tool for managing Agent Skills and MCP (Model Context Prot
 ## Features
 
 - **Skills Management**
+  - Search skills from [skills.sh](https://skills.sh) (powered by free API)
   - Install skills from URL, local file, or GitHub repository
   - View SKILL.md content and token count
   - Delete installed skills

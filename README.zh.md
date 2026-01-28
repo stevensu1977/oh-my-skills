@@ -12,6 +12,7 @@
 ## 功能特性
 
 - **Skills 管理**
+  - 从 [skills.sh](https://skills.sh) 搜索 Skills（使用免费 API）
   - 从 URL、本地文件或 GitHub 仓库安装 Skills
   - 查看 SKILL.md 内容和 Token 数量
   - 删除已安装的 Skills
