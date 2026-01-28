@@ -39,7 +39,7 @@
       "icons/icon.ico"
     ],
     "macOS": {
-      "signingIdentity": "Apple Development: suwie007@gmail.com (SEGXV4Y5ZQ)",
+      "signingIdentity": "Developer ID Application: WEI SU (CF686579RY)",
       "entitlements": null
     }
   },
