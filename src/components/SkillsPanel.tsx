@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { FolderOpen, Trash2 } from "lucide-react";
-import type { AgentType, SkillInfo } from "../types";
+import { FolderOpen, Trash2, Search, Download } from "lucide-react";
+import type { AgentType, SkillInfo, SearchSkill } from "../types";
 
 interface Props {
   agent: AgentType;
@@ -12,12 +12,77 @@ interface Props {
 
 export default function SkillsPanel({ agent, skills, onRefresh, showToast }: Props) {
   const [showDialog, setShowDialog] = useState(false);
-  const [installMode, setInstallMode] = useState<"url" | "file">("url");
+  const [installMode, setInstallMode] = useState<"search" | "url" | "file">("search");
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchSkill[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [installingSlug, setInstallingSlug] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const doSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    setSearching(true);
+    try {
+      const results = await invoke<SearchSkill[]>("search_skills", { query });
+      setSearchResults(results);
+    } catch (e) {
+      console.error("Search failed:", e);
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    if (searchQuery.trim()) {
+      const delay = searchQuery.length <= 2 ? 300 : 150;
+      searchTimeoutRef.current = setTimeout(() => {
+        doSearch(searchQuery);
+      }, delay);
+    } else {
+      setSearchResults([]);
+    }
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery, doSearch]);
+
+  const handleInstallFromSearch = async (skill: SearchSkill) => {
+    const source = skill.source || skill.slug;
+    if (!source) {
+      showToast("No source available for this skill", "error");
+      return;
+    }
+    setInstallingSlug(skill.slug);
+    try {
+      const skillUrl = `https://github.com/${source}`;
+      const result = await invoke<string>("install_skill_from_url", { agent, url: skillUrl });
+      showToast(result);
+      onRefresh();
+    } catch (e) {
+      showToast(`${e}`, "error");
+    } finally {
+      setInstallingSlug(null);
+    }
+  };
+
+  const formatInstalls = (count: number) => {
+    if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
+    return String(count);
+  };
 
   const formatTokens = (count: number | null) => {
     if (!count) return "";
@@ -149,6 +214,13 @@ export default function SkillsPanel({ agent, skills, onRefresh, showToast }: Pro
             <div className="dialog-body">
               <div className="tab-buttons">
                 <button
+                  className={`tab-btn ${installMode === "search" ? "active" : ""}`}
+                  onClick={() => setInstallMode("search")}
+                >
+                  <Search size={14} style={{ marginRight: 4 }} />
+                  Search
+                </button>
+                <button
                   className={`tab-btn ${installMode === "url" ? "active" : ""}`}
                   onClick={() => setInstallMode("url")}
                 >
@@ -162,7 +234,52 @@ export default function SkillsPanel({ agent, skills, onRefresh, showToast }: Pro
                 </button>
               </div>
 
-              {installMode === "url" ? (
+              {installMode === "search" ? (
+                <div className="search-container">
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Search skills on skills.sh..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoFocus
+                    />
+                  </div>
+                  <div className="search-results">
+                    {searching ? (
+                      <div className="search-loading">Searching...</div>
+                    ) : searchResults.length > 0 ? (
+                      searchResults.map((skill) => (
+                        <div key={skill.slug} className="search-result-item">
+                          <div className="search-result-info">
+                            <div className="search-result-name">{skill.name}</div>
+                            <div className="search-result-meta">
+                              {skill.source && <span className="search-result-source">{skill.source}</span>}
+                              <span className="search-result-installs">{formatInstalls(skill.installs)} installs</span>
+                            </div>
+                          </div>
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => handleInstallFromSearch(skill)}
+                            disabled={installingSlug === skill.slug}
+                          >
+                            {installingSlug === skill.slug ? (
+                              "..."
+                            ) : (
+                              <Download size={14} />
+                            )}
+                          </button>
+                        </div>
+                      ))
+                    ) : searchQuery.trim() ? (
+                      <div className="search-empty">No skills found</div>
+                    ) : (
+                      <div className="search-empty">Type to search for skills</div>
+                    )}
+                  </div>
+                </div>
+              ) : installMode === "url" ? (
                 <div className="form-group">
                   <label className="form-label">Skill URL or GitHub directory</label>
                   <input

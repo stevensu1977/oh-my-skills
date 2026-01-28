@@ -57,4 +57,11 @@ export interface AddMcpServerRequest {
   headers?: Record<string, string>;
 }
 
+export interface SearchSkill {
+  name: string;
+  slug: string;
+  source: string;
+  installs: number;
+}
+
 export type Tab = "skills" | "mcp";

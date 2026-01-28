@@ -529,3 +529,94 @@ body {
   height: 20px;
   font-size: 11px;
 }
+
+/* Search */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  height: 280px;
+}
+
+.search-container .form-group {
+  margin-bottom: 12px;
+}
+
+.search-results {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-primary);
+}
+
+.search-loading,
+.search-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background: var(--bg-hover);
+}
+
+.search-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result-name {
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.search-result-source {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-installs {
+  color: var(--accent);
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 12px;
+  min-width: 32px;
+  justify-content: center;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
