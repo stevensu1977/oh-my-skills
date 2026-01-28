@@ -3,7 +3,7 @@ set -e
 
 # Configuration
 SIGNING_IDENTITY="Developer ID Application: WEI SU (CF686579RY)"
-REPO="wsuam/oh-my-skills"  # Change to your repo
+REPO="stevensu1977/oh-my-skills"
 APP_NAME="OhMySkills"
 
 # Colors
