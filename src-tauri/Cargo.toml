@@ -18,6 +18,7 @@ zip = "2"
 base64 = "0.22"
 chrono = "0.4"
 open = "5"
+urlencoding = "2"
 
 [profile.release]
 strip = true

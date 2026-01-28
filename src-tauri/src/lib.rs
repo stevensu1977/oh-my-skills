@@ -87,6 +87,14 @@ pub struct AddMcpServerRequest {
     pub headers: Option<HashMap<String, String>>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct SearchSkill {
+    pub name: String,
+    pub slug: String,
+    pub source: String,
+    pub installs: u64,
+}
+
 // ============================================================================
 // Paths
 // ============================================================================
@@ -580,6 +588,69 @@ fn open_skill_folder(agent: AgentType, name: String) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+async fn search_skills(query: String) -> Result<Vec<SearchSkill>, String> {
+    if query.trim().is_empty() {
+        return Ok(vec![]);
+    }
+
+    let client = reqwest::Client::builder()
+        .user_agent("Oh-My-Skills/0.1")
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let url = format!(
+        "https://skills.sh/api/search?q={}&limit=20",
+        urlencoding::encode(&query)
+    );
+
+    let response = client
+        .get(&url)
+        .send()
+        .await
+        .map_err(|e| format!("Failed to search: {}", e))?;
+
+    if !response.status().is_success() {
+        return Ok(vec![]);
+    }
+
+    let data: serde_json::Value = response
+        .json()
+        .await
+        .map_err(|e| format!("Invalid response: {}", e))?;
+
+    let skills = data
+        .get("skills")
+        .and_then(|s| s.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|item| {
+                    let name = item.get("name")?.as_str()?.to_string();
+                    let slug = item.get("id")?.as_str()?.to_string();
+                    let source = item
+                        .get("topSource")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("")
+                        .to_string();
+                    let installs = item
+                        .get("installs")
+                        .and_then(|v| v.as_u64())
+                        .unwrap_or(0);
+
+                    Some(SearchSkill {
+                        name,
+                        slug,
+                        source,
+                        installs,
+                    })
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+
+    Ok(skills)
+}
+
 // ============================================================================
 // MCP Server Commands
 // ============================================================================
@@ -987,6 +1058,7 @@ pub fn run() {
             install_skill_from_zip,
             delete_skill,
             open_skill_folder,
+            search_skills,
             list_mcp_servers,
             add_mcp_server,
             remove_mcp_server,
