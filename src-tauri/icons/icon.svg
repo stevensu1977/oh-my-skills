@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 紫蓝色背景 -->
+  <rect width="512" height="512" fill="#6366f1"/>
+
+  <!-- 芯片外框 -->
+  <rect x="128" y="128" width="256" height="256" rx="32" stroke="#fff" stroke-width="16" fill="none"/>
+
+  <!-- 闪电核心 -->
+  <path d="M272 176l-80 112h64l-16 80 80-112h-64l16-80z" fill="#fff"/>
+
+  <!-- 上方引脚 -->
+  <line x1="192" y1="64" x2="192" y2="128" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="256" y1="64" x2="256" y2="128" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="320" y1="64" x2="320" y2="128" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+
+  <!-- 下方引脚 -->
+  <line x1="192" y1="384" x2="192" y2="448" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="256" y1="384" x2="256" y2="448" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="320" y1="384" x2="320" y2="448" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+
+  <!-- 左侧引脚 -->
+  <line x1="64" y1="192" x2="128" y2="192" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="64" y1="256" x2="128" y2="256" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="64" y1="320" x2="128" y2="320" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+
+  <!-- 右侧引脚 -->
+  <line x1="384" y1="192" x2="448" y2="192" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="384" y1="256" x2="448" y2="256" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <line x1="384" y1="320" x2="448" y2="320" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+</svg>
