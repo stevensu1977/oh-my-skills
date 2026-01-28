@@ -17,11 +17,20 @@ use tauri::{
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum AgentType {
+    All,
     Claude,
     Gemini,
     Codex,
     Opencode,
     Kiro,
+    Antigravity,
+    Codebuddy,
+    Cursor,
+    Kimi,
+    Moltbot,
+    Qoder,
+    Qwen,
+    Zencoder,
 }
 
 impl Default for AgentType {
@@ -82,14 +91,42 @@ pub struct AddMcpServerRequest {
 // Paths
 // ============================================================================
 
+/// Returns all individual agent types (excluding All)
+fn get_all_individual_agents() -> Vec<AgentType> {
+    vec![
+        AgentType::Claude,
+        AgentType::Gemini,
+        AgentType::Codex,
+        AgentType::Opencode,
+        AgentType::Kiro,
+        AgentType::Antigravity,
+        AgentType::Codebuddy,
+        AgentType::Cursor,
+        AgentType::Kimi,
+        AgentType::Moltbot,
+        AgentType::Qoder,
+        AgentType::Qwen,
+        AgentType::Zencoder,
+    ]
+}
+
 fn get_skills_dir(agent: AgentType) -> Result<PathBuf, String> {
     let home = dirs::home_dir().ok_or("Cannot find home directory")?;
     match agent {
+        AgentType::All => Err("Cannot get skills dir for All agent".to_string()),
         AgentType::Claude => Ok(home.join(".claude").join("skills")),
         AgentType::Gemini => Ok(home.join(".gemini").join("skills")),
         AgentType::Codex => Ok(home.join(".codex").join("skills")),
-        AgentType::Opencode => Ok(home.join(".opencode").join("skills")),
+        AgentType::Opencode => Ok(home.join(".config").join("opencode").join("skills")),
         AgentType::Kiro => Ok(home.join(".kiro").join("skills")),
+        AgentType::Antigravity => Ok(home.join(".gemini").join("antigravity").join("global_skills")),
+        AgentType::Codebuddy => Ok(home.join(".codebuddy").join("skills")),
+        AgentType::Cursor => Ok(home.join(".cursor").join("skills")),
+        AgentType::Kimi => Ok(home.join(".kimi").join("skills")),
+        AgentType::Moltbot => Ok(home.join(".moltbot").join("skills")),
+        AgentType::Qoder => Ok(home.join(".qoder").join("skills")),
+        AgentType::Qwen => Ok(home.join(".qwen").join("skills")),
+        AgentType::Zencoder => Ok(home.join(".zencoder").join("skills")),
     }
 }
 
@@ -99,13 +136,20 @@ fn get_mcp_config_path(agent: AgentType) -> Result<PathBuf, String> {
         AgentType::Claude => Ok(home.join(".claude.json")),
         AgentType::Gemini => Ok(home.join(".gemini").join("settings.json")),
         AgentType::Codex => Ok(home.join(".codex").join("config.toml")),
-        AgentType::Opencode => Ok(home.join(".opencode").join("config.json")),
+        AgentType::Opencode => Ok(home.join(".config").join("opencode").join("config.json")),
         AgentType::Kiro => Ok(home.join(".kiro").join("settings.json")),
+        // These agents don't have MCP support
+        AgentType::All | AgentType::Antigravity | AgentType::Codebuddy | AgentType::Cursor |
+        AgentType::Kimi | AgentType::Moltbot | AgentType::Qoder |
+        AgentType::Qwen | AgentType::Zencoder => Err("MCP not supported for this agent".to_string()),
     }
 }
 
 fn agent_has_mcp_support(agent: AgentType) -> bool {
-    matches!(agent, AgentType::Claude | AgentType::Gemini | AgentType::Opencode | AgentType::Kiro)
+    matches!(
+        agent,
+        AgentType::Claude | AgentType::Gemini | AgentType::Opencode | AgentType::Kiro
+    )
 }
 
 // ============================================================================
@@ -138,7 +182,7 @@ fn list_agents() -> Result<Vec<AgentInfo>, String> {
         AgentInfo {
             id: "opencode".to_string(),
             name: "OpenCode".to_string(),
-            skills_path: home.join(".opencode").join("skills").to_string_lossy().to_string(),
+            skills_path: home.join(".config").join("opencode").join("skills").to_string_lossy().to_string(),
             has_mcp: true,
         },
         AgentInfo {
@@ -146,6 +190,54 @@ fn list_agents() -> Result<Vec<AgentInfo>, String> {
             name: "Kiro CLI".to_string(),
             skills_path: home.join(".kiro").join("skills").to_string_lossy().to_string(),
             has_mcp: true,
+        },
+        AgentInfo {
+            id: "antigravity".to_string(),
+            name: "Antigravity".to_string(),
+            skills_path: home.join(".gemini").join("antigravity").join("global_skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "codebuddy".to_string(),
+            name: "CodeBuddy".to_string(),
+            skills_path: home.join(".codebuddy").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "cursor".to_string(),
+            name: "Cursor".to_string(),
+            skills_path: home.join(".cursor").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "kimi".to_string(),
+            name: "Kimi CLI".to_string(),
+            skills_path: home.join(".kimi").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "moltbot".to_string(),
+            name: "Moltbot".to_string(),
+            skills_path: home.join(".moltbot").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "qoder".to_string(),
+            name: "Qoder".to_string(),
+            skills_path: home.join(".qoder").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "qwen".to_string(),
+            name: "Qwen Code".to_string(),
+            skills_path: home.join(".qwen").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
+        },
+        AgentInfo {
+            id: "zencoder".to_string(),
+            name: "Zencoder".to_string(),
+            skills_path: home.join(".zencoder").join("skills").to_string_lossy().to_string(),
+            has_mcp: false,
         },
     ];
 
@@ -158,6 +250,30 @@ fn list_agents() -> Result<Vec<AgentInfo>, String> {
 
 #[tauri::command]
 fn list_skills(agent: AgentType) -> Result<Vec<SkillInfo>, String> {
+    // Handle "All" agent - combine skills from all agents
+    if agent == AgentType::All {
+        let mut all_skills = Vec::new();
+        let mut seen_names = std::collections::HashSet::new();
+
+        for individual_agent in get_all_individual_agents() {
+            if let Ok(skills) = list_skills_for_agent(individual_agent) {
+                for skill in skills {
+                    // Deduplicate by name (same skill might be in multiple agents)
+                    if seen_names.insert(skill.name.clone()) {
+                        all_skills.push(skill);
+                    }
+                }
+            }
+        }
+
+        all_skills.sort_by(|a, b| a.name.cmp(&b.name));
+        return Ok(all_skills);
+    }
+
+    list_skills_for_agent(agent)
+}
+
+fn list_skills_for_agent(agent: AgentType) -> Result<Vec<SkillInfo>, String> {
     let skills_dir = get_skills_dir(agent)?;
 
     if !skills_dir.exists() {
@@ -210,6 +326,24 @@ fn get_skill_content(agent: AgentType, name: String) -> Result<String, String> {
 
 #[tauri::command]
 async fn install_skill_from_url(agent: AgentType, url: String) -> Result<String, String> {
+    // Handle "All" agent - install to all agents
+    if agent == AgentType::All {
+        let url_clone = url.clone();
+        let mut success_count = 0;
+        let mut skill_name = String::new();
+
+        for individual_agent in get_all_individual_agents() {
+            if let Ok(result) = Box::pin(install_skill_from_url(individual_agent, url_clone.clone())).await {
+                success_count += 1;
+                if skill_name.is_empty() {
+                    skill_name = result.replace("Installed: ", "");
+                }
+            }
+        }
+
+        return Ok(format!("Installed {} to {} agents", skill_name, success_count));
+    }
+
     let url = url.trim();
 
     // Check if it's a GitHub directory URL
@@ -239,6 +373,24 @@ async fn install_skill_from_url(agent: AgentType, url: String) -> Result<String,
 
 #[tauri::command]
 fn install_skill_from_content(agent: AgentType, content: String, filename: String) -> Result<String, String> {
+    // Handle "All" agent - install to all agents
+    if agent == AgentType::All {
+        let mut success_count = 0;
+        let name = extract_skill_name(&content, &filename);
+
+        for individual_agent in get_all_individual_agents() {
+            if install_skill_from_content_for_agent(individual_agent, content.clone(), filename.clone()).is_ok() {
+                success_count += 1;
+            }
+        }
+
+        return Ok(format!("Installed {} to {} agents", name, success_count));
+    }
+
+    install_skill_from_content_for_agent(agent, content, filename)
+}
+
+fn install_skill_from_content_for_agent(agent: AgentType, content: String, filename: String) -> Result<String, String> {
     let name = extract_skill_name(&content, &filename);
 
     let skills_dir = get_skills_dir(agent)?;
@@ -256,6 +408,27 @@ fn install_skill_from_content(agent: AgentType, content: String, filename: Strin
 
 #[tauri::command]
 fn install_skill_from_zip(agent: AgentType, zip_base64: String, source: String) -> Result<String, String> {
+    // Handle "All" agent - install to all agents
+    if agent == AgentType::All {
+        let mut success_count = 0;
+        let mut skill_name = String::new();
+
+        for individual_agent in get_all_individual_agents() {
+            if let Ok(result) = install_skill_from_zip_for_agent(individual_agent, zip_base64.clone(), source.clone()) {
+                success_count += 1;
+                if skill_name.is_empty() {
+                    skill_name = result.replace("Installed: ", "");
+                }
+            }
+        }
+
+        return Ok(format!("Installed {} to {} agents", skill_name, success_count));
+    }
+
+    install_skill_from_zip_for_agent(agent, zip_base64, source)
+}
+
+fn install_skill_from_zip_for_agent(agent: AgentType, zip_base64: String, source: String) -> Result<String, String> {
     let zip_data = STANDARD
         .decode(&zip_base64)
         .map_err(|e| format!("Invalid base64: {}", e))?;
@@ -349,6 +522,18 @@ fn install_skill_from_zip(agent: AgentType, zip_base64: String, source: String) 
 
 #[tauri::command]
 fn delete_skill(agent: AgentType, name: String) -> Result<(), String> {
+    // Handle "All" agent - delete from all agents
+    if agent == AgentType::All {
+        for individual_agent in get_all_individual_agents() {
+            let _ = delete_skill_for_agent(individual_agent, name.clone());
+        }
+        return Ok(());
+    }
+
+    delete_skill_for_agent(agent, name)
+}
+
+fn delete_skill_for_agent(agent: AgentType, name: String) -> Result<(), String> {
     let skills_dir = get_skills_dir(agent)?;
     let skill_dir = skills_dir.join(&name);
 
@@ -361,6 +546,10 @@ fn delete_skill(agent: AgentType, name: String) -> Result<(), String> {
 
 #[tauri::command]
 fn open_skill_folder(agent: AgentType, name: String) -> Result<(), String> {
+    if agent == AgentType::All {
+        return Err("Cannot open folder for All agents".to_string());
+    }
+
     let skills_dir = get_skills_dir(agent)?;
     let skill_dir = skills_dir.join(&name);
 

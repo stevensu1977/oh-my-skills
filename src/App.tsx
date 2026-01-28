@@ -6,11 +6,20 @@ import SkillsPanel from "./components/SkillsPanel";
 import MCPPanel from "./components/MCPPanel";
 
 const AGENTS: { id: AgentType; name: string; icon: string }[] = [
+  { id: "all", name: "All Agents", icon: "*" },
   { id: "claude", name: "Claude Code", icon: "C" },
   { id: "gemini", name: "Gemini CLI", icon: "G" },
   { id: "codex", name: "Codex CLI", icon: "X" },
   { id: "opencode", name: "OpenCode", icon: "O" },
   { id: "kiro", name: "Kiro CLI", icon: "K" },
+  { id: "antigravity", name: "Antigravity", icon: "A" },
+  { id: "codebuddy", name: "CodeBuddy", icon: "B" },
+  { id: "cursor", name: "Cursor", icon: "U" },
+  { id: "kimi", name: "Kimi CLI", icon: "I" },
+  { id: "moltbot", name: "Moltbot", icon: "M" },
+  { id: "qoder", name: "Qoder", icon: "D" },
+  { id: "qwen", name: "Qwen Code", icon: "Q" },
+  { id: "zencoder", name: "Zencoder", icon: "Z" },
 ];
 
 function App() {
@@ -62,7 +71,8 @@ function App() {
   }, [loadAgentInfo, loadSkills, loadMcpServers]);
 
   const currentAgent = AGENTS.find(a => a.id === agent) || AGENTS[0];
-  const hasMcp = agentInfo?.has_mcp ?? agent === "claude";
+  // "all" agent doesn't show MCP tab (too complex to manage MCP for all agents)
+  const hasMcp = agent !== "all" && (agentInfo?.has_mcp ?? agent === "claude");
 
   return (
     <div className="app">

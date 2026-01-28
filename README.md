@@ -1,6 +1,8 @@
 # OhMySkills
 
-A minimal desktop tool for managing Agent Skills and MCP (Model Context Protocol) Servers.
+A minimal desktop GUI tool for managing Agent Skills and MCP (Model Context Protocol) Servers.
+
+> Inspired by [Vercel's add-skill CLI](https://github.com/vercel-labs/skills) - this project provides a graphical interface for the same ecosystem.
 
 ![Skills](./screenshots/Skills.png)
 ![Add Skills](./screenshots/Add-Skills.png)
@@ -22,8 +24,17 @@ A minimal desktop tool for managing Agent Skills and MCP (Model Context Protocol
 - **Multi-Agent Support**
   - Claude Code (`~/.claude/skills/`, `~/.claude.json`)
   - Gemini CLI (`~/.gemini/skills/`, `~/.gemini/settings.json`)
-  - Codex CLI (`~/.codex/skills/`, `~/.codex/config.toml`)
+  - Codex CLI (`~/.codex/skills/`)
+  - OpenCode (`~/.config/opencode/skills/`)
   - Kiro CLI (`~/.kiro/skills/`, `~/.kiro/settings.json`)
+  - Antigravity (`~/.gemini/antigravity/global_skills/`)
+  - CodeBuddy (`~/.codebuddy/skills/`)
+  - Cursor (`~/.cursor/skills/`)
+  - Kimi CLI (`~/.kimi/skills/`)
+  - Moltbot (`~/.moltbot/skills/`)
+  - Qoder (`~/.qoder/skills/`)
+  - Qwen Code (`~/.qwen/skills/`)
+  - Zencoder (`~/.zencoder/skills/`)
 
 - **System Tray**
   - Runs in background with tray icon
@@ -76,16 +87,25 @@ pnpm tauri build
 
 ### Switching Agents
 
-Use the dropdown in the header to switch between Claude, Gemini, Codex, and Kiro agents.
+Use the dropdown in the header to switch between supported agents.
 
 ## Configuration Files
 
 | Agent | Skills Directory | MCP Config |
 |-------|-----------------|------------|
-| Claude | `~/.claude/skills/` | `~/.claude.json` |
-| Gemini | `~/.gemini/skills/` | `~/.gemini/settings.json` |
-| Codex | `~/.codex/skills/` | `~/.codex/config.toml` |
-| Kiro | `~/.kiro/skills/` | `~/.kiro/settings.json` |
+| Claude Code | `~/.claude/skills/` | `~/.claude.json` |
+| Gemini CLI | `~/.gemini/skills/` | `~/.gemini/settings.json` |
+| Codex CLI | `~/.codex/skills/` | - |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/config.json` |
+| Kiro CLI | `~/.kiro/skills/` | `~/.kiro/settings.json` |
+| Antigravity | `~/.gemini/antigravity/global_skills/` | - |
+| CodeBuddy | `~/.codebuddy/skills/` | - |
+| Cursor | `~/.cursor/skills/` | - |
+| Kimi CLI | `~/.kimi/skills/` | - |
+| Moltbot | `~/.moltbot/skills/` | - |
+| Qoder | `~/.qoder/skills/` | - |
+| Qwen Code | `~/.qwen/skills/` | - |
+| Zencoder | `~/.zencoder/skills/` | - |
 
 ## License
 

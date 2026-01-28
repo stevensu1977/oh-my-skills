@@ -21,3 +21,17 @@ Thumbs.db
 # Local env
 .env
 .env.local
+
+# Certificates and secrets
+*.pem
+*.cer
+*.p12
+*.key
+*.crt
+
+# Claude Code local settings
+.claude/
+
+# Temporary files
+release-tmp/
+docs/

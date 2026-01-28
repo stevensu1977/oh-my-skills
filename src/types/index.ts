@@ -1,4 +1,18 @@
-export type AgentType = "claude" | "gemini" | "codex" | "opencode" | "kiro";
+export type AgentType =
+  | "all"
+  | "claude"
+  | "gemini"
+  | "codex"
+  | "opencode"
+  | "kiro"
+  | "antigravity"
+  | "codebuddy"
+  | "cursor"
+  | "kimi"
+  | "moltbot"
+  | "qoder"
+  | "qwen"
+  | "zencoder";
 
 export interface AgentInfo {
   id: AgentType;

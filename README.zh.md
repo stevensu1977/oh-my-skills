@@ -1,6 +1,8 @@
 # OhMySkills
 
-一个极简的桌面工具，用于管理 Agent Skills 和 MCP（Model Context Protocol）服务器。
+一个极简的桌面 GUI 工具，用于管理 Agent Skills 和 MCP（Model Context Protocol）服务器。
+
+> 灵感来源于 [Vercel 的 add-skill CLI](https://github.com/vercel-labs/skills) - 本项目为同一生态系统提供图形化界面。
 
 ![Skills](./screenshots/Skills.png)
 ![Add Skills](./screenshots/Add-Skills.png)
@@ -22,8 +24,17 @@
 - **多 Agent 支持**
   - Claude Code (`~/.claude/skills/`, `~/.claude.json`)
   - Gemini CLI (`~/.gemini/skills/`, `~/.gemini/settings.json`)
-  - Codex CLI (`~/.codex/skills/`, `~/.codex/config.toml`)
+  - Codex CLI (`~/.codex/skills/`)
+  - OpenCode (`~/.config/opencode/skills/`)
   - Kiro CLI (`~/.kiro/skills/`, `~/.kiro/settings.json`)
+  - Antigravity (`~/.gemini/antigravity/global_skills/`)
+  - CodeBuddy (`~/.codebuddy/skills/`)
+  - Cursor (`~/.cursor/skills/`)
+  - Kimi CLI (`~/.kimi/skills/`)
+  - Moltbot (`~/.moltbot/skills/`)
+  - Qoder (`~/.qoder/skills/`)
+  - Qwen Code (`~/.qwen/skills/`)
+  - Zencoder (`~/.zencoder/skills/`)
 
 - **系统托盘**
   - 后台运行，托盘图标常驻
@@ -76,16 +87,25 @@ pnpm tauri build
 
 ### 切换 Agent
 
-使用顶部下拉菜单在 Claude、Gemini、Codex 和 Kiro 之间切换。
+使用顶部下拉菜单在已支持的 Agents 之间切换。
 
 ## 配置文件
 
 | Agent | Skills 目录 | MCP 配置 |
 |-------|------------|----------|
-| Claude | `~/.claude/skills/` | `~/.claude.json` |
-| Gemini | `~/.gemini/skills/` | `~/.gemini/settings.json` |
-| Codex | `~/.codex/skills/` | `~/.codex/config.toml` |
-| Kiro | `~/.kiro/skills/` | `~/.kiro/settings.json` |
+| Claude Code | `~/.claude/skills/` | `~/.claude.json` |
+| Gemini CLI | `~/.gemini/skills/` | `~/.gemini/settings.json` |
+| Codex CLI | `~/.codex/skills/` | - |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/config.json` |
+| Kiro CLI | `~/.kiro/skills/` | `~/.kiro/settings.json` |
+| Antigravity | `~/.gemini/antigravity/global_skills/` | - |
+| CodeBuddy | `~/.codebuddy/skills/` | - |
+| Cursor | `~/.cursor/skills/` | - |
+| Kimi CLI | `~/.kimi/skills/` | - |
+| Moltbot | `~/.moltbot/skills/` | - |
+| Qoder | `~/.qoder/skills/` | - |
+| Qwen Code | `~/.qwen/skills/` | - |
+| Zencoder | `~/.zencoder/skills/` | - |
 
 ## 许可证
 
