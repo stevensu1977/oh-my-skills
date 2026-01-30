@@ -620,3 +620,237 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Clickable list item */
+.list-item.clickable {
+  cursor: pointer;
+}
+
+/* Skill Detail */
+.skill-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.skill-detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.skill-detail-header .btn-icon {
+  flex-shrink: 0;
+}
+
+.skill-detail-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.skill-detail-title h2 {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.skill-detail-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.skill-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.skill-detail-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.skill-detail-actions a.btn {
+  text-decoration: none;
+}
+
+/* Skill Detail Tabs */
+.skill-detail-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.skill-detail-tab {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.skill-detail-tab:hover {
+  color: var(--text-primary);
+}
+
+.skill-detail-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Skill Detail Content */
+.skill-detail-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.skill-detail-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+}
+
+.skill-detail-markdown {
+  height: 100%;
+  overflow: auto;
+  padding: 16px;
+}
+
+.skill-detail-markdown pre {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-primary);
+}
+
+/* File Explorer */
+.skill-detail-files {
+  height: 100%;
+  overflow: hidden;
+}
+
+.file-explorer {
+  display: flex;
+  height: 100%;
+}
+
+.file-tree {
+  width: 200px;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.file-tree-item:hover {
+  background: var(--bg-hover);
+}
+
+.file-tree-item.selected {
+  background: rgba(100, 108, 255, 0.15);
+  color: var(--accent);
+}
+
+.file-tree-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.file-tree-icon.folder {
+  color: #e8a838;
+}
+
+.file-tree-icon.file {
+  color: var(--text-secondary);
+}
+
+.file-tree-icon.loading {
+  font-size: 10px;
+  width: 14px;
+  text-align: center;
+}
+
+.file-tree-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-tree-size {
+  font-size: 10px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* File Preview */
+.file-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.file-preview-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-preview-content {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.file-preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  font-size: 13px;
+}

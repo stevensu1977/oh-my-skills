@@ -29,6 +29,7 @@ export interface SkillInfo {
 
 export interface SkillMetadata {
   name: string;
+  description: string | null;
   source: string | null;
   version: string | null;
   author: string | null;
@@ -62,6 +63,13 @@ export interface SearchSkill {
   slug: string;
   source: string;
   installs: number;
+}
+
+export interface FileItem {
+  name: string;
+  path: string;
+  is_directory: boolean;
+  size: number | null;
 }
 
 export type Tab = "skills" | "mcp";

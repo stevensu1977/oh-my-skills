@@ -5,6 +5,8 @@ A minimal desktop GUI tool for managing Agent Skills and MCP (Model Context Prot
 > Inspired by [Vercel's add-skill CLI](https://github.com/vercel-labs/skills) - this project provides a graphical interface for the same ecosystem.
 
 ![Skills](./screenshots/Skills.png)
+![Skill Detail - Content](./screenshots/Skill-Detail-01.png)
+![Skill Detail - Files](./screenshots/Skill-Detail-02.png)
 ![Add Skills](./screenshots/Add-Skills.png)
 ![MCP Server](./screenshots/MCP-Server.png)
 ![Add MCP Server](./screenshots/Add-MCP-Server.png)
@@ -14,7 +16,8 @@ A minimal desktop GUI tool for managing Agent Skills and MCP (Model Context Prot
 - **Skills Management**
   - Search skills from [skills.sh](https://skills.sh) (powered by free API)
   - Install skills from URL, local file, or GitHub repository
-  - View SKILL.md content and token count
+  - View skill details: name, description, and SKILL.md content
+  - Browse skill files with built-in file explorer (read-only)
   - Delete installed skills
   
 - **MCP Servers Management**

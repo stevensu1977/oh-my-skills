@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { FolderOpen, Trash2, Search, Download } from "lucide-react";
 import type { AgentType, SkillInfo, SearchSkill } from "../types";
+import SkillDetail from "./SkillDetail";
 
 interface Props {
   agent: AgentType;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function SkillsPanel({ agent, skills, onRefresh, showToast }: Props) {
+  const [selectedSkill, setSelectedSkill] = useState<SkillInfo | null>(null);
   const [showDialog, setShowDialog] = useState(false);
   const [installMode, setInstallMode] = useState<"search" | "url" | "file">("search");
   const [url, setUrl] = useState("");
@@ -165,6 +167,18 @@ export default function SkillsPanel({ agent, skills, onRefresh, showToast }: Pro
     }
   };
 
+  // Show detail view if a skill is selected
+  if (selectedSkill) {
+    return (
+      <SkillDetail
+        agent={agent}
+        skill={selectedSkill}
+        onBack={() => setSelectedSkill(null)}
+        showToast={showToast}
+      />
+    );
+  }
+
   return (
     <>
       <div className="list">
@@ -178,12 +192,12 @@ export default function SkillsPanel({ agent, skills, onRefresh, showToast }: Pro
           </div>
         ) : (
           skills.map((skill) => (
-            <div key={skill.name} className="list-item">
+            <div key={skill.name} className="list-item clickable" onClick={() => setSelectedSkill(skill)}>
               <div className="list-item-info">
                 <div className="list-item-name">{skill.name}</div>
                 <div className="list-item-meta">{formatTokens(skill.token_count)}</div>
               </div>
-              <div className="list-item-actions">
+              <div className="list-item-actions" onClick={(e) => e.stopPropagation()}>
                 <button className="btn btn-icon" onClick={() => handleOpenFolder(skill.name)} title="Open folder">
                   <FolderOpen size={16} />
                 </button>

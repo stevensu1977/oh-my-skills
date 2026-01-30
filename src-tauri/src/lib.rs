@@ -54,9 +54,18 @@ pub struct SkillInfo {
     pub token_count: Option<u64>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct FileItem {
+    pub name: String,
+    pub path: String,
+    pub is_directory: bool,
+    pub size: Option<u64>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SkillMetadata {
     pub name: String,
+    pub description: Option<String>,
     pub source: Option<String>,
     pub version: Option<String>,
     pub author: Option<String>,
@@ -330,6 +339,98 @@ fn get_skill_content(agent: AgentType, name: String) -> Result<String, String> {
         find_skill_md(&skill_dir).ok_or_else(|| format!("SKILL.md not found in {}", name))?;
 
     fs::read_to_string(skill_md).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn get_skill_metadata(agent: AgentType, name: String) -> Result<Option<SkillMetadata>, String> {
+    let skills_dir = get_skills_dir(agent)?;
+    let metadata_path = skills_dir.join(&name).join(".metadata.json");
+
+    if !metadata_path.exists() {
+        return Ok(None);
+    }
+
+    let content = fs::read_to_string(&metadata_path).map_err(|e| e.to_string())?;
+    let metadata: SkillMetadata = serde_json::from_str(&content).map_err(|e| e.to_string())?;
+    Ok(Some(metadata))
+}
+
+#[tauri::command]
+fn list_skill_files(agent: AgentType, name: String, subpath: Option<String>) -> Result<Vec<FileItem>, String> {
+    let skills_dir = get_skills_dir(agent)?;
+    let mut target_dir = skills_dir.join(&name);
+
+    if let Some(sub) = subpath {
+        target_dir = target_dir.join(sub);
+    }
+
+    if !target_dir.exists() {
+        return Ok(vec![]);
+    }
+
+    let mut items = Vec::new();
+    let entries = fs::read_dir(&target_dir).map_err(|e| e.to_string())?;
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        let file_name = path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("")
+            .to_string();
+
+        // Skip hidden files except .metadata.json
+        if file_name.starts_with('.') && file_name != ".metadata.json" {
+            continue;
+        }
+
+        let is_directory = path.is_dir();
+        let size = if is_directory {
+            None
+        } else {
+            fs::metadata(&path).ok().map(|m| m.len())
+        };
+
+        // Get relative path from skill root
+        let relative_path = path
+            .strip_prefix(&skills_dir.join(&name))
+            .map(|p| p.to_string_lossy().to_string())
+            .unwrap_or_else(|_| file_name.clone());
+
+        items.push(FileItem {
+            name: file_name,
+            path: relative_path,
+            is_directory,
+            size,
+        });
+    }
+
+    // Sort: directories first, then by name
+    items.sort_by(|a, b| {
+        match (a.is_directory, b.is_directory) {
+            (true, false) => std::cmp::Ordering::Less,
+            (false, true) => std::cmp::Ordering::Greater,
+            _ => a.name.cmp(&b.name),
+        }
+    });
+
+    Ok(items)
+}
+
+#[tauri::command]
+fn read_skill_file(agent: AgentType, name: String, file_path: String) -> Result<String, String> {
+    let skills_dir = get_skills_dir(agent)?;
+    let full_path = skills_dir.join(&name).join(&file_path);
+
+    // Security: ensure path doesn't escape skill directory
+    let canonical = full_path.canonicalize().map_err(|e| e.to_string())?;
+    let skill_dir = skills_dir.join(&name).canonicalize().map_err(|e| e.to_string())?;
+
+    if !canonical.starts_with(&skill_dir) {
+        return Err("Access denied: path outside skill directory".to_string());
+    }
+
+    fs::read_to_string(&canonical).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -861,6 +962,23 @@ fn extract_skill_name(content: &str, fallback: &str) -> String {
         .to_string()
 }
 
+fn extract_skill_description(content: &str) -> Option<String> {
+    if content.starts_with("---") {
+        if let Some(end) = content[3..].find("---") {
+            let frontmatter = &content[3..3 + end];
+            for line in frontmatter.lines() {
+                if line.starts_with("description:") {
+                    let desc = line[12..].trim().trim_matches('"').trim_matches('\'');
+                    if !desc.is_empty() {
+                        return Some(desc.to_string());
+                    }
+                }
+            }
+        }
+    }
+    None
+}
+
 fn sanitize_name(name: &str) -> String {
     let sanitized: String = name
         .chars()
@@ -879,8 +997,14 @@ fn sanitize_name(name: &str) -> String {
 fn save_metadata(skill_dir: &PathBuf, name: &str, source: Option<String>) -> Result<(), String> {
     let now = chrono::Utc::now().to_rfc3339();
 
+    // Try to extract description from SKILL.md
+    let description = find_skill_md(skill_dir)
+        .and_then(|skill_md_path| fs::read_to_string(skill_md_path).ok())
+        .and_then(|content| extract_skill_description(&content));
+
     let metadata = SkillMetadata {
         name: name.to_string(),
+        description,
         source,
         version: None,
         author: None,
@@ -1053,6 +1177,9 @@ pub fn run() {
             list_agents,
             list_skills,
             get_skill_content,
+            get_skill_metadata,
+            list_skill_files,
+            read_skill_file,
             install_skill_from_url,
             install_skill_from_content,
             install_skill_from_zip,
