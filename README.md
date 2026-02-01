@@ -2,6 +2,8 @@
 
 A minimal desktop GUI tool for managing Agent Skills and MCP (Model Context Protocol) Servers.
 
+**Website**: [https://ohmys.dev](https://ohmys.dev) | **Download**: [GitHub Releases](https://github.com/stevensu1977/oh-my-skills/releases)
+
 > Inspired by [Vercel's add-skill CLI](https://github.com/vercel-labs/skills) - this project provides a graphical interface for the same ecosystem.
 
 ![Skills](./screenshots/Skills.png)
