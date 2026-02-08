@@ -854,3 +854,106 @@ body {
   color: var(--text-secondary);
   font-size: 13px;
 }
+
+/* Dialog Wide */
+.dialog-wide {
+  width: 520px;
+}
+
+/* Dialog Tabs */
+.dialog-body .tabs {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.dialog-body .tab {
+  padding: 8px 16px;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: -1px;
+}
+
+.dialog-body .tab.active {
+  background: transparent;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* Form Textarea */
+.form-textarea {
+  min-height: 200px;
+  resize: vertical;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Form Hint */
+.form-hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* Form Label Row */
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.form-label-row .form-label {
+  margin-bottom: 0;
+}
+
+/* Environment Variables */
+.env-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  background: var(--bg-primary);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+}
+
+.env-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.env-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.env-key {
+  flex: 0 0 140px;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+}
+
+.env-separator {
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+}
+
+.env-value {
+  flex: 1;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+}
+
+/* Button Secondary */
+.btn-secondary {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+}
